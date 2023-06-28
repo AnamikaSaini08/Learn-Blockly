@@ -1,9 +1,7 @@
-import React, { useEffect } from 'react'
 import * as THREE from 'three';
 
-const Matrix = () => {
-    useEffect(() => {
-        const scene = new THREE.Scene();
+export const initialMatrixConfiguration = (row,col,batteryPosition,obstaclePosition,robotStartPosition,robotEndPosition,robotPosition,setRobotPosition,sceneRef,cameraRef,rendererRef,containerRef,cylinderRef,robot)=>{
+    const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(
           75,
           (window.innerWidth) /( window.innerHeight),
@@ -83,12 +81,4 @@ const Matrix = () => {
           cancelAnimationFrame(animate);
           scene.clear();
         };
-      }, []);
-  return (
-    <div>
-      
-    </div>
-  )
-}
-
-export default Matrix
+ }
