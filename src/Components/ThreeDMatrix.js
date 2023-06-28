@@ -1,5 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef,useState } from 'react';
+import { useSelector } from 'react-redux';
 import * as THREE from 'three';
+import robot from '../images/robot.jpg';
 
 const Matrix3D = () => {
   const containerRef = useRef(null);
@@ -10,6 +12,11 @@ const Matrix3D = () => {
   const cursorXRef = useRef(0);
   const cursorYRef = useRef(0);
   const cylinderRef = useRef(null);
+  let blocklyInstruction = useSelector((store)=>store.blocklyInstruction.blockInstructionArray);
+  const [robotPosition,setRobotPosition] = useState({x:1,  y:1});
+  const gameConfig = useSelector(store=>store.matrixConfig.gameConfig);
+  console.log("gameConfig- ",gameConfig);
+  const {row,col,batteryPosition,obstaclePosition,robotStartPosition,robotEndPosition} = {...gameConfig};
 
   useEffect(() => {
     const scene = new THREE.Scene();
@@ -24,31 +31,44 @@ const Matrix3D = () => {
     renderer.setSize((window.innerWidth/2), window.innerHeight);
     containerRef.current.appendChild(renderer.domElement);
 
-    const gridSize = 10;
     const cellHeight = 2;
     const cellWidth = 4;
     const chessboard = [];
 
-    for (let i = 0; i < gridSize; i++) {
-      for (let j = 0; j < gridSize; j++) {
+    for (let i = 1; i <= row; i++) {
+      for (let j = 1; j <= col; j++) {
         const geometry = new THREE.PlaneGeometry(cellWidth, cellHeight);
         const material = new THREE.MeshBasicMaterial({
           color: (i + j) % 2 === 0 ? 'blue' : 'pink',
-          side: THREE.DoubleSide,
+          side: THREE.FrontSide,
         });
         const square = new THREE.Mesh(geometry, material);
-        square.position.x = (j - gridSize / 2) * cellWidth;
-        square.position.y = (i - gridSize / 2) * cellHeight;
+        square.position.x = (j - row / 2) * cellWidth;
+        square.position.y = (i - row / 2) * cellHeight;
         chessboard.push(square);
         scene.add(square);
+        if (i === robotPosition.x && j === robotPosition.y) {
+          const robotGeometry = new THREE.PlaneGeometry(cellWidth, cellHeight);
+          const robotTexture = new THREE.TextureLoader().load(robot);
+          const robotMaterial = new THREE.MeshBasicMaterial({
+            map: robotTexture,
+            side: THREE.DoubleSide,
+          });
+          const robotMesh = new THREE.Mesh(robotGeometry, robotMaterial);
+          robotMesh.position.x = square.position.x;
+          robotMesh.position.y = square.position.y;
+          scene.add(robotMesh);
+          
+        }
         if (i === 5 && j === 5) {
-          const geometry = new THREE.CylinderGeometry(1, 1);
+          const geometry = new THREE.CylinderGeometry(0.7, 0.7);
           const material = new THREE.MeshBasicMaterial({
-            color: 0xffff00,
+            color: 'red',
             transparent: true,
           });
           const cylinder = new THREE.Mesh(geometry, material);
           cylinder.position.z += 2;
+         
           scene.add(cylinder);
           cylinderRef.current = cylinder;
         }
@@ -59,15 +79,15 @@ const Matrix3D = () => {
 
     sceneRef.current = scene;
     cameraRef.current = camera;
-    rendererRef.current = renderer;
+    rendererRef.current = renderer; 
 
     const animate = () => {
       requestAnimationFrame(animate);
 
       // Update cylinder position and rotation
       if (cylinderRef.current) {
-        cylinderRef.current.rotation.x += 0.01;
-        cylinderRef.current.rotation.y += 0.01;
+        cylinderRef.current.rotation.z += 0.01;
+       // cylinderRef.current.rotation.y += 0.01;
       }
 
       renderer.render(scene, camera);

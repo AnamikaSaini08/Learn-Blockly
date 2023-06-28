@@ -7,7 +7,7 @@ const blocklyInstructionSlice = createSlice({
     },
     reducers: {
         addBlockInstruction : (state,action)=>{
-            state.blockInstructionArray.push(action.payload);
+            state.blockInstructionArray = action.payload;
         }
     }
 });

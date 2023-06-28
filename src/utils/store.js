@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import blocklyInstructionSlice from './blocklyInstructionSlice';
+import matrixConfigSlice from "./matrixConfigSlice";
 
 const store = configureStore(
     {
         reducer:{
-            blockInstruction : blocklyInstructionSlice,
+            blocklyInstruction : blocklyInstructionSlice,
+            matrixConfig : matrixConfigSlice,
         }
     }
 );
