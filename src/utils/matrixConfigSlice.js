@@ -8,8 +8,8 @@ const matrixConfigSlice = createSlice({
             col: 10,
             robotStartPosition: {x:1,y:1},
             robotEndPosition : {x:10 , y:10},
-            obstaclePosition:[],
-            batteryPosition:[],
+            obstaclePosition:[[2,3],[7,7]],
+            batteryPosition:[[4,4],[9,9]],
         }
     }
 });
