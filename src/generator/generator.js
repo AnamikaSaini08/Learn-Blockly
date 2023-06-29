@@ -5,22 +5,21 @@ javascriptGenerator['turn_block'] = function(block) {
   
     let turnCode;
     if (direction === 'LEFT') {
-      turnCode = 'turnLeft();\n';
+      turnCode = 'LEFT,';
     } else {
-      turnCode = 'turnRight();\n';
+      turnCode = 'RIGHT,';
     }
   
     return turnCode;
   };
   javascriptGenerator['move_block'] = function(block) {
     const direction = block.getFieldValue('DIRECTION');
-    const steps = block.getFieldValue('STEPS');
   
     let moveCode;
     if (direction === 'FORWARD') {
-      moveCode = `moveForward(${steps});\n`;
+      moveCode = `FORWARD,`;
     } else {
-      moveCode = `moveBackward(${steps});\n`;
+      moveCode = `BACKWARD,`;
     }
   
     return moveCode;

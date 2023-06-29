@@ -7,8 +7,7 @@ export const initialMatrixConfiguration = (
   obstaclePosition,
   robotStartPosition,
   robotEndPosition,
-  robotPosition,
-  setRobotPosition,
+  robotPositionRef,
   sceneRef,
   cameraRef,
   rendererRef,
@@ -16,8 +15,11 @@ export const initialMatrixConfiguration = (
   cylinderRef,
   robot,
   filterBatteryPosition,
-  setFilteredBatteryPosition
+  setFilteredBatteryPosition,
+  robotPosition,
 ) => {
+  console.log("Matrix Render");
+  console.log("robotPosition- ",robotPosition);
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(
     75,
@@ -39,7 +41,7 @@ export const initialMatrixConfiguration = (
       const geometry = new THREE.PlaneGeometry(cellWidth, cellHeight);
       const material = new THREE.MeshBasicMaterial({
         color: (i + j) % 2 === 0 ? "blue" : "pink",
-        side: THREE.FrontSide,
+        side: THREE.DoubleSide,
       });
       const square = new THREE.Mesh(geometry, material);
       square.position.x = (j - row / 2) * cellWidth;
@@ -62,6 +64,7 @@ export const initialMatrixConfiguration = (
       }
       //Robot Position
       if (i === robotPosition.x && j === robotPosition.y) {
+        console.log(i,j);
         const robotGeometry = new THREE.PlaneGeometry(cellWidth, cellHeight);
         const robotTexture = new THREE.TextureLoader().load(robot);
         const robotMaterial = new THREE.MeshBasicMaterial({
@@ -74,6 +77,8 @@ export const initialMatrixConfiguration = (
         scene.add(robotMesh);
         continue;
       }
+
+      //Battery Position
       if (filterBatteryPosition && filterBatteryPosition.length > 0) {
         filterBatteryPosition.forEach((coor) => {
           if (coor[0] === i && coor[1] === j) {
@@ -86,7 +91,7 @@ export const initialMatrixConfiguration = (
             cylinder.position.x = square.position.x;
             cylinder.position.y = square.position.y;
             scene.add(cylinder);
-
+            //I want each cylinder roate so have to make seperate cylinderRef for each.
             const cylinderRef = {
               current: cylinder,
             };

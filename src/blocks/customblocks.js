@@ -28,7 +28,7 @@ Blockly.Blocks['turn_block'] = {
 //Move Block in forward/backward direction
 const moveBlock = {
   "type": "move_block",
-  "message0": "Move %1 %2 steps",
+  "message0": "Move %1",
   "args0": [
     {
       "type": "field_dropdown",
@@ -38,12 +38,6 @@ const moveBlock = {
         ["Backward", "BACKWARD"]
       ]
     },
-    {
-      "type": "field_number",
-      "name": "STEPS",
-      "value": 1,
-      "min": 1
-    }
   ],
   "previousStatement": null,
   "nextStatement": null,

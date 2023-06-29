@@ -8,40 +8,50 @@ import "blockly/blocks";
 import { useDispatch, useSelector } from "react-redux";
 import { addBlockInstruction } from "../utils/blocklyInstructionSlice";
 import { generateCode } from "../utils/generateBlocklyCode";
-import {changeRobotPosition} from '../utils/changeRobotPosition';
+import { changeRobotPosition } from "../utils/changeRobotPosition";
 
 Blockly.setLocale(locale);
 
 function BlocklyComponent(props) {
+  const {robotPositionRef ,robotPosition, setRobotPosition} = props;
   const blocklyDiv = useRef();
   const toolbox = useRef();
   let primaryWorkspace = useRef();
   let blocklyInstruction = useSelector(
     (store) => store.blocklyInstruction.blockInstructionArray
   );
-  const dispatch = useDispatch();
-  const [blockInsState, setBlockInsState] = useState([]);
-  let commandArray= [];
+  const gamesConfig = useSelector((store) => store.matrixConfig);
+  const {
+    row,
+    col,
+    batteryPosition,
+    obstaclePosition,
+  } = gamesConfig.gameConfigOne;
 
-  const generateBlocklyCode = ()=>{
-    commandArray = generateCode(primaryWorkspace,javascriptGenerator);
+  const dispatch = useDispatch();
+  let commandArray = [];
+
+  const generateBlocklyCode = () => {
+    commandArray = generateCode(primaryWorkspace, javascriptGenerator);
     dispatch(addBlockInstruction(commandArray));
-     //Below print , means just after dispatch render does't occur - neeche saare execute hone ke baad phir render hoga.
-  }
+    //Below print , means just after dispatch render does't occur - neeche saare execute hone ke baad phir render hoga.
+  };
 
   useEffect(() => {
-    setBlockInsState(blocklyInstruction);
     console.log("blocklyInstruction- ", blocklyInstruction);
-    //changeRobotPosition(blocklyInstruction,robotPosition,setRobotPosition,obstaclePosition,row,col);
+    changeRobotPosition(blocklyInstruction,obstaclePosition,row,col,robotPositionRef,robotPosition,setRobotPosition);
   }, [blocklyInstruction]);
+
+  
 
   useEffect(() => {
     const { children, ...rest } = props;
+    const { readOnly,trashcan,media,move} = props;
     primaryWorkspace.current = Blockly.inject(blocklyDiv.current, {
       toolbox: toolbox.current,
-      ...rest,
+      readOnly,trashcan,media,move
     });
-  }, [props]);
+  },  [primaryWorkspace, toolbox, blocklyDiv, props]);
 
   return (
     <div className="flex flex-col">

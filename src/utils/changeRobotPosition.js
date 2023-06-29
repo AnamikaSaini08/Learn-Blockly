@@ -1,9 +1,18 @@
-const changeRobotPosition = (blocklyInstruction , robotPosition ,setRobotPosition,obstaclePosition,row,col)=>{
-    for(let i=1 ; i<=blocklyInstruction.length ; i++){
-      const direction = blocklyInstruction[i-1];
-      let pos = {x:1 , y:1};
-      setTimeout(()=>{
-        if(direction === "moveForward"){
+let interval;
+
+export const changeRobotPosition = (blocklyInstruction , obstaclePosition,row,col,robotPositionRef,robotPosition,setRobotPosition)=>{
+   let pos = {x:1 , y:1};
+   let index = 1;
+
+      interval = setInterval(()=>
+      {
+        if(index > blocklyInstruction.length){
+          clearInterval(interval);
+          return;
+        }
+        const direction = blocklyInstruction[index-1];
+        if(direction === "BACKWARD"){
+          console.log("BACKWARD- ",pos.y);
           if (pos.y > 1) {
             if (
               obstaclePosition &&
@@ -11,16 +20,19 @@ const changeRobotPosition = (blocklyInstruction , robotPosition ,setRobotPositio
                 (coord) => coord[0] === pos.x && coord[1] === pos.y - 1
               )
             ) {
-              console.log("Stuck", "You Fail! Robot got stuck on the way");
+              alert("Stuck", "You Fail! Robot got stuck on the way");
+              clearInterval(interval);
             } else {
               pos = { ...pos, y: pos.y - 1 };
             }
           } else {
-            console.log("Stuck", "You Fail! Robot got stuck on the way");
+            alert("Stuck", "You Fail! Robot got stuck on the way");
+            clearInterval(interval);
             return;
           }
         }
-        else if(direction === "moveBackward"){
+        else if(direction === "FORWARD"){
+          console.log("Forward- ",pos.y);
           if (pos.y < col) {
             if (
               obstaclePosition &&
@@ -28,16 +40,20 @@ const changeRobotPosition = (blocklyInstruction , robotPosition ,setRobotPositio
                 (coord) => coord[0] === pos.x && coord[1] === pos.y + 1
               )
             ) {
-              console.log("Stuck", "You Fail! Robot got stuck on the way");
+              alert("Stuck", "You Fail! Robot got stuck on the way");
+              clearInterval(interval);
             } else {
               pos = { ...pos, y: pos.y + 1 };
+             
             }
           } else {
-            console.log("Stuck", "You Fail! Robot got stuck on the way");
+            alert("Stuck", "You Fail! Robot got stuck on the way");
+            clearInterval(interval);
             return;
           }
         }
-        else if(direction === "turnLeft"){
+        else if(direction === "LEFT"){
+          console.log("left- ",pos.x);
           if (pos.x > 1) {
             if (
               obstaclePosition &&
@@ -45,17 +61,20 @@ const changeRobotPosition = (blocklyInstruction , robotPosition ,setRobotPositio
                 (coord) => coord[0] === pos.x - 1 && coord[1] === pos.y
               )
             ) {
-              console.log("Stuck", "You Fail! Robot got stuck on the way");
+              alert("Stuck", "You Fail! Robot got stuck on the way");
+              clearInterval(interval);
             } else {
               pos = { ...pos, x: pos.x - 1 };
             }
           } else {
-            console.log("Stuck", "You Fail! Robot got stuck on the way");
+            alert("Stuck", "You Fail! Robot got stuck on the way");
+            clearInterval(interval);
             return;
           }
         }
-        else if(direction === "turnRight")
-        {
+        else if(direction === "RIGHT")
+        { 
+          console.log("right- ",pos.x);
           if (pos.x < row) {
             if (
               obstaclePosition &&
@@ -63,16 +82,20 @@ const changeRobotPosition = (blocklyInstruction , robotPosition ,setRobotPositio
                 (coord) => coord[0] === pos.x + 1 && coord[1] === pos.y
               )
             ) {
-              console.log("Stuck", "You Fail! Robot got stuck on the way");
+              alert("Stuck", "You Fail! Robot got stuck on the way");
+              clearInterval(interval);
             } else {
               pos = { ...pos, x: pos.x + 1 };
+              
             }
           } else {
-            console.log("Stuck", "You Fail! Robot got stuck on the way");
+            alert("Stuck", "You Fail! Robot got stuck on the way");
+            clearInterval(interval);
             return;
           }
         }
-        setRobotPosition()
-      },1500)
-    }
+        index++;
+        //robotPositionRef.current = { ...robotPositionRef.current, ...pos };
+        setRobotPosition({...pos}); 
+      },1500);
   }
