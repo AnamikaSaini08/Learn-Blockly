@@ -33,6 +33,7 @@ function BlocklyComponent(props) {
 
   const generateBlocklyCode = () => {
     commandArray = generateCode(primaryWorkspace, javascriptGenerator);
+    console.log(commandArray,"---");
     dispatch(addBlockInstruction(commandArray));
     //Below print , means just after dispatch render does't occur - neeche saare execute hone ke baad phir render hoga.
   };

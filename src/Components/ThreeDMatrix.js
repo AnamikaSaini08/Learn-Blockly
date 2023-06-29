@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import robot from "../images/robot.jpg";
 import { initialMatrixConfiguration } from "../utils/matrixGame";
 
-const ThreeDMatrix = ( {
+const ThreeDMatrix = ({
   row,
   col,
   batteryPosition,
@@ -12,7 +12,7 @@ const ThreeDMatrix = ( {
   robotEndPosition,
   robotPositionRef,
   robotPosition,
-  setRobotPosition
+  setRobotPosition,
 }) => {
   const containerRef = useRef(null);
   const sceneRef = useRef(null);
@@ -22,35 +22,34 @@ const ThreeDMatrix = ( {
   const cursorXRef = useRef(0);
   const cursorYRef = useRef(0);
   const cylinderRef = useRef(null);
-  
-  const [filterBatteryPosition , setFiletredBatteryPosition] = useState(batteryPosition);
 
-useEffect(() => {
-  initialMatrixConfiguration(
-    row,
-    col,
-    batteryPosition,
-    obstaclePosition,
-    robotStartPosition,
-    robotEndPosition,
-    robotPositionRef,
-    sceneRef,
-    cameraRef,
-    rendererRef,
-    containerRef,
-    cylinderRef,
-    robot,
-    filterBatteryPosition,
-    setFiletredBatteryPosition,
-    robotPosition,
+  const [filterBatteryPosition, setFilteredBatteryPosition] = useState(
+    batteryPosition
   );
-}, [robotPosition]);
 
-
-  /*useEffect(()=>{
-    setRobotPosition(robotPositionRef.current);
-    console.log("Robottttttttttttt ",robotPosition)
-  },[robotPositionRef.current])*/
+  useEffect(() => {
+    // Update the matrix when robotPosition changes
+    const container = containerRef.current;
+    container.innerHTML = ""; // Clear the previous matrix
+    initialMatrixConfiguration(
+      row,
+      col,
+      batteryPosition,
+      obstaclePosition,
+      robotStartPosition,
+      robotEndPosition,
+      robotPositionRef,
+      sceneRef,
+      cameraRef,
+      rendererRef,
+      containerRef,
+      cylinderRef,
+      robot,
+      filterBatteryPosition,
+      setFilteredBatteryPosition,
+      robotPosition
+    );
+  }, [robotPosition]);
 
   const handleMouseDown = () => {
     isCursorPressedRef.current = true;
@@ -66,10 +65,10 @@ useEffect(() => {
         event.movementX || event.mozMovementX || event.webkitMovementX || 0;
       const movementY =
         event.movementY || event.mozMovementY || event.webkitMovementY || 0;
-  
+
       cursorXRef.current += movementX;
       cursorYRef.current += movementY;
-  
+
       const rotationSpeed = 0.01;
       sceneRef.current.rotation.z = 0;
 
@@ -77,7 +76,6 @@ useEffect(() => {
       sceneRef.current.rotation.y = cursorXRef.current * rotationSpeed;
     }
   };
-  
 
   useEffect(() => {
     const container = containerRef.current;
