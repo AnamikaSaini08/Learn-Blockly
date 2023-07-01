@@ -114,10 +114,15 @@ export const initialMatrixConfiguration = (
   }
 
   camera.position.z = 20;
-  camera.up.set(0, 0, 1); // Set camera up direction to the positive z-axis (horizontal)
+  camera.up.set(0, 0, 5); // Set camera up direction to the positive z-axis (horizontal)
   scene.rotation.x = -Math.PI / 5; // Rotate the scene by 90 degrees around the x-axis
 
   sceneRef.current = scene;
   cameraRef.current = camera;
   rendererRef.current = renderer;
+  /*
+In the given code, the sceneRef.current is assigned the value of the scene object, cameraRef.current is assigned the value of the camera object,
+and rendererRef.current is assigned the value of the renderer object. This means that any modifications made to sceneRef.current will affect the 
+scene object,modifications to cameraRef.current will affect the camera object, and modifications to rendererRef.current will affect the renderer object.
+  */
 };

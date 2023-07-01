@@ -32,7 +32,7 @@ function BlocklyComponent(props) {
   let commandArray = [];
 
   const generateBlocklyCode = () => {
-    commandArray = generateCode(primaryWorkspace, javascriptGenerator);
+    commandArray = generateCode(primaryWorkspace.current, javascriptGenerator);
     console.log(commandArray,"---");
     dispatch(addBlockInstruction(commandArray));
     //Below print , means just after dispatch render does't occur - neeche saare execute hone ke baad phir render hoga.
@@ -50,9 +50,12 @@ function BlocklyComponent(props) {
     const { readOnly,trashcan,media,move} = props;
     primaryWorkspace.current = Blockly.inject(blocklyDiv.current, {
       toolbox: toolbox.current,
-      readOnly,trashcan,media,move
+      readOnly,trashcan,media,move,
+      trashcan: props.trashcan,
+      media: props.media,
+      move: props.move,
     });
-  },  [primaryWorkspace, toolbox, blocklyDiv, props]);
+  },  [primaryWorkspace, toolbox, blocklyDiv]);
 
   return (
     <div className="flex flex-col">
