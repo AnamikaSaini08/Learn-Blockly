@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 export const initialMatrixConfiguration = (
   row,
@@ -18,8 +19,6 @@ export const initialMatrixConfiguration = (
   setFilteredBatteryPosition,
   robotPosition,
 ) => {
-  console.log("Matrix Render");
-  console.log("robotPosition- ",robotPosition);
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(
     75,
@@ -44,12 +43,12 @@ export const initialMatrixConfiguration = (
         side: THREE.DoubleSide,
       });
       const square = new THREE.Mesh(geometry, material);
-      square.position.x = (j - row / 2) * cellWidth;
-      square.position.y = (i - col / 2) * cellHeight;
+      square.position.x = (j - col / 2) * cellWidth; // Modify to use col instead of row
+      square.position.y = (i - row / 2) * cellHeight; // Modify to use row instead of col
       chessboard.push(square);
       scene.add(square);
 
-      //Obstacle Condition
+      // Obstacle Condition
       if (obstaclePosition && obstaclePosition.some(
         (coor) => coor[0] === i && coor[1] === j
       )) {
@@ -62,9 +61,8 @@ export const initialMatrixConfiguration = (
         scene.add(cube);
         continue;
       }
-      //Robot Position
-      if (i === robotPosition.x && j === robotPosition.y) {
-        console.log(i,j);
+      // Robot Position
+      if (i === robotPosition.x && j === robotPosition.y) { // Modify to use robotPosition.y and robotPosition.x
         const robotGeometry = new THREE.PlaneGeometry(cellWidth, cellHeight);
         const robotTexture = new THREE.TextureLoader().load(robot);
         const robotMaterial = new THREE.MeshBasicMaterial({
@@ -78,7 +76,7 @@ export const initialMatrixConfiguration = (
         continue;
       }
 
-      //Battery Position
+      // Battery Position
       if (filterBatteryPosition && filterBatteryPosition.length > 0) {
         filterBatteryPosition.forEach((coor) => {
           if (coor[0] === i && coor[1] === j) {
@@ -90,8 +88,9 @@ export const initialMatrixConfiguration = (
             const cylinder = new THREE.Mesh(geometry, material);
             cylinder.position.x = square.position.x;
             cylinder.position.y = square.position.y;
+            cylinder.position.z += 1;
             scene.add(cylinder);
-            //I want each cylinder roate so have to make seperate cylinderRef for each.
+            // I want each cylinder to rotate, so have to make a separate cylinderRef for each.
             const cylinderRef = {
               current: cylinder,
             };
@@ -114,15 +113,10 @@ export const initialMatrixConfiguration = (
   }
 
   camera.position.z = 20;
-  camera.up.set(0, 0, 5); // Set camera up direction to the positive z-axis (horizontal)
-  scene.rotation.x = -Math.PI / 5; // Rotate the scene by 90 degrees around the x-axis
+  //camera.up.set(0, 0, 5); // Set camera up direction to the positive z-axis (horizontal)
+  //scene.rotation.x = -Math.PI / 5; // Rotate the scene by 90 degrees around the x-axis
 
   sceneRef.current = scene;
   cameraRef.current = camera;
   rendererRef.current = renderer;
-  /*
-In the given code, the sceneRef.current is assigned the value of the scene object, cameraRef.current is assigned the value of the camera object,
-and rendererRef.current is assigned the value of the renderer object. This means that any modifications made to sceneRef.current will affect the 
-scene object,modifications to cameraRef.current will affect the camera object, and modifications to rendererRef.current will affect the renderer object.
-  */
 };

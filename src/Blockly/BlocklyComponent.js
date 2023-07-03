@@ -26,21 +26,23 @@ function BlocklyComponent(props) {
     col,
     batteryPosition,
     obstaclePosition,
+    initialDirectionRobot
   } = gamesConfig.gameConfigOne;
+  const robotDirectionRef = useRef(initialDirectionRobot);
 
   const dispatch = useDispatch();
   let commandArray = [];
 
   const generateBlocklyCode = () => {
-    commandArray = generateCode(primaryWorkspace.current, javascriptGenerator);
-    console.log(commandArray,"---");
+    commandArray = generateCode(primaryWorkspace.current, javascriptGenerator);;
     dispatch(addBlockInstruction(commandArray));
     //Below print , means just after dispatch render does't occur - neeche saare execute hone ke baad phir render hoga.
   };
 
   useEffect(() => {
     console.log("blocklyInstruction- ", blocklyInstruction);
-    changeRobotPosition(blocklyInstruction,obstaclePosition,row,col,robotPositionRef,robotPosition,setRobotPosition);
+    robotPositionRef.current = initialDirectionRobot;
+    changeRobotPosition(blocklyInstruction,obstaclePosition,row,col,setRobotPosition,robotDirectionRef);
   }, [blocklyInstruction]);
 
   
